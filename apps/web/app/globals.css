@@ -1,0 +1,151 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* OutfAI Cybersigilism Color System */
+/* Light mode - editorial bone-white aesthetic */
+:root {
+  /* Core palette - Light mode */
+  --background: #F4F3EF;
+  --foreground: #0A0A0A;
+  --card: #FFFFFF;
+  --card-foreground: #0A0A0A;
+  --popover: #F4F3EF;
+  --popover-foreground: #0A0A0A;
+  --primary: #0A0A0A;
+  --primary-foreground: #F4F3EF;
+  --secondary: #E8E7E3;
+  --secondary-foreground: #0A0A0A;
+  --muted: #E8E7E3;
+  --muted-foreground: #6A6A6A;
+  --accent: #FF4D00;
+  --accent-foreground: #FFFFFF;
+  --destructive: #FF4D00;
+  --destructive-foreground: #FFFFFF;
+  --border: #D4D3CF;
+  --input: #D4D3CF;
+  --ring: #0A0A0A;
+  
+  /* Accent colors */
+  --signal-orange: #FF4D00;
+  --acid-lime: #7ACC00;
+  --electric-blue: #0038FF;
+  --chrome-silver: #8A8A8A;
+
+  /* Shadcn/ui default chart and sidebar colors - Added from diff */
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  
+  --radius: 0;
+}
+
+/* Dark mode - near-black cybersigilism aesthetic */
+.dark {
+  --background: #0A0A0A;
+  --foreground: #F4F3EF;
+  --card: #111111;
+  --card-foreground: #F4F3EF;
+  --popover: #0A0A0A;
+  --popover-foreground: #F4F3EF;
+  --primary: #F4F3EF;
+  --primary-foreground: #0A0A0A;
+  --secondary: #1A1A1A;
+  --secondary-foreground: #F4F3EF;
+  --muted: #1A1A1A;
+  --muted-foreground: #8A8A8A;
+  --accent: #FF4D00;
+  --accent-foreground: #0A0A0A;
+  --destructive: #FF4D00;
+  --destructive-foreground: #0A0A0A;
+  --border: #2A2A2A;
+  --input: #2A2A2A;
+  --ring: #F4F3EF;
+  --chart-1: #FF4D00;
+  --chart-2: #B6FF00;
+  --chart-3: #0038FF;
+  --chart-4: #C9CCD6;
+  --chart-5: #F4F3EF;
+  --sidebar: #111111;
+  --sidebar-foreground: #F4F3EF;
+  --sidebar-primary: #FF4D00;
+  --sidebar-primary-foreground: #0A0A0A;
+  --sidebar-accent: #1A1A1A;
+  --sidebar-accent-foreground: #F4F3EF;
+  --sidebar-border: #2A2A2A;
+  --sidebar-ring: #F4F3EF;
+  
+  /* Accent colors - brighter for dark mode */
+  --signal-orange: #FF4D00;
+  --acid-lime: #B6FF00;
+  --electric-blue: #0038FF;
+  --chrome-silver: #C9CCD6;
+}
+
+@theme inline {
+  --font-sans: 'Inter', 'Inter Fallback', system-ui, sans-serif; /* Preserved from existing */
+  --font-serif: 'Instrument Serif', Georgia, serif; /* Preserved from existing */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-signal-orange: var(--signal-orange); /* Preserved from existing */
+  --color-acid-lime: var(--acid-lime); /* Preserved from existing */
+  --color-electric-blue: var(--electric-blue); /* Preserved from existing */
+  --color-chrome-silver: var(--chrome-silver); /* Preserved from existing */
+  
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+
+  /* Added chart and sidebar color mappings from diff */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
