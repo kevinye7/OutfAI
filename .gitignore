@@ -110,6 +110,9 @@ dist
 # Docusaurus cache and generated files
 .docusaurus
 
+# Vercel CLI output
+.vercel/
+
 # Serverless directories
 .serverless/
 
