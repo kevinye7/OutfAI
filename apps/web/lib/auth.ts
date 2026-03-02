@@ -14,6 +14,8 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    // Allow short passwords so the dev "test/test" account works
+    minPasswordLength: 1,
   },
   plugins: [username()],
 });
