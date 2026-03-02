@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
@@ -20,19 +19,35 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
 
-    const result = await signIn("credentials", {
-      username,
-      password,
-      redirect: false,
-    });
+    try {
+      // Fetch CSRF token required by NextAuth credentials callback
+      const csrfRes = await fetch("/api/auth/csrf");
+      const { csrfToken } = await csrfRes.json();
 
-    setLoading(false);
+      const res = await fetch("/api/auth/callback/credentials", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          csrfToken,
+          username,
+          password,
+          callbackUrl,
+          json: "true",
+        }),
+      });
 
-    if (result?.error) {
-      setError("Invalid username or password.");
-    } else {
-      router.push(callbackUrl);
-      router.refresh();
+      const data = await res.json();
+
+      if (data.url && !data.url.includes("error")) {
+        router.push(data.url);
+        router.refresh();
+      } else {
+        setError("Invalid username or password.");
+      }
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
