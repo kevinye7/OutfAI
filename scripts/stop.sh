@@ -26,8 +26,8 @@ else
     log "Docker not running — skipping Docker Compose teardown."
 fi
 
-log "Freeing project ports (3000, 54321-54324)..."
-for port in 3000 54321 54322 54323 54324; do
+log "Freeing project ports (3000, 5433, 54321-54324)..."
+for port in 3000 5433 54321 54322 54323 54324; do
     stop_port "$port"
 done
 
