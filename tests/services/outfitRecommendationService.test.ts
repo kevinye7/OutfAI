@@ -20,7 +20,7 @@ const WARDROBE: Garment[] = [
   makeGarment({
     id: "top-1",
     name: "White Cotton T-Shirt",
-    category: "tops",
+    category: "top",
     primaryColor: "white",
     material: "cotton",
     season: "summer",
@@ -29,7 +29,7 @@ const WARDROBE: Garment[] = [
   makeGarment({
     id: "top-2",
     name: "Blue Dress Shirt",
-    category: "tops",
+    category: "top",
     primaryColor: "blue",
     material: "cotton",
     season: "all-season",
@@ -38,7 +38,7 @@ const WARDROBE: Garment[] = [
   makeGarment({
     id: "top-3",
     name: "Wool Sweater",
-    category: "tops",
+    category: "top",
     primaryColor: "navy",
     material: "wool",
     season: "winter",
@@ -47,7 +47,7 @@ const WARDROBE: Garment[] = [
   makeGarment({
     id: "bottom-1",
     name: "Black Jeans",
-    category: "bottoms",
+    category: "bottom",
     primaryColor: "black",
     material: "denim",
     season: "all-season",
@@ -56,7 +56,7 @@ const WARDROBE: Garment[] = [
   makeGarment({
     id: "bottom-2",
     name: "Khaki Chinos",
-    category: "bottoms",
+    category: "bottom",
     primaryColor: "beige",
     material: "cotton",
     season: "all-season",
@@ -65,7 +65,7 @@ const WARDROBE: Garment[] = [
   makeGarment({
     id: "bottom-3",
     name: "Wool Trousers",
-    category: "bottoms",
+    category: "bottom",
     primaryColor: "gray",
     material: "wool",
     season: "winter",
@@ -128,10 +128,10 @@ describe("OutfitRecommendationService", () => {
       );
 
       const topIds = new Set(
-        WARDROBE.filter((g) => g.category === "tops").map((g) => g.id)
+        WARDROBE.filter((g) => g.category === "top").map((g) => g.id)
       );
       const bottomIds = new Set(
-        WARDROBE.filter((g) => g.category === "bottoms").map((g) => g.id)
+        WARDROBE.filter((g) => g.category === "bottom").map((g) => g.id)
       );
 
       for (const outfit of result.outfits) {
@@ -143,7 +143,7 @@ describe("OutfitRecommendationService", () => {
     });
 
     it("returns empty when only tops exist (no bottoms)", async () => {
-      const topsOnly = WARDROBE.filter((g) => g.category === "tops");
+      const topsOnly = WARDROBE.filter((g) => g.category === "top");
       const result = await OutfitRecommendationService.generateOutfits(
         topsOnly,
         { userId: "user-1", mood: "casual" }
@@ -152,7 +152,7 @@ describe("OutfitRecommendationService", () => {
     });
 
     it("returns empty when only bottoms exist (no tops)", async () => {
-      const bottomsOnly = WARDROBE.filter((g) => g.category === "bottoms");
+      const bottomsOnly = WARDROBE.filter((g) => g.category === "bottom");
       const result = await OutfitRecommendationService.generateOutfits(
         bottomsOnly,
         { userId: "user-1", mood: "casual" }

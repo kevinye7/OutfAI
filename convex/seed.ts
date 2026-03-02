@@ -121,12 +121,10 @@ export const createTestAccount = internalAction({
     }
 
     // ── 3. Seed the closet so the test account is fully ready immediately ──────
-    const seedResult = await ctx.runMutation(
-      internal.seed.seedClosetForUserId,
-      {
+    const seedResult: { seeded: boolean; count: number } =
+      await ctx.runMutation(internal.seed.seedClosetForUserId, {
         userId: userDoc._id as string,
-      }
-    );
+      });
 
     return {
       created: !alreadyExists,

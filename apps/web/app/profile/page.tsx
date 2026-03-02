@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
+import type { Doc } from "@convex/_generated/dataModel";
 import { useRequireAuth } from "@/hooks/use-require-auth";
 import { authClient } from "@/lib/auth-client";
 
@@ -63,11 +64,8 @@ export default function ProfilePage() {
                   <p className="text-lg font-medium truncate">
                     {currentUser.name}
                   </p>
-                  {/* @ts-expect-error username field added by username plugin */}
                   {currentUser.username && (
-                    // @ts-expect-error username field added by username plugin
                     <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-0.5">
-                      {/* @ts-expect-error username field added by username plugin */}
                       @{currentUser.username}
                     </p>
                   )}
@@ -104,7 +102,7 @@ export default function ProfilePage() {
             </div>
             <div className="bg-background px-5 py-4">
               <p className="text-3xl font-light tabular-nums">
-                {new Set(garments.map((g) => g.category)).size}
+                {new Set(garments.map((g: Doc<"garments">) => g.category)).size}
               </p>
               <p className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground mt-1">
                 Categories

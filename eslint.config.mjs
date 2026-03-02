@@ -5,10 +5,11 @@ export default tseslint.config(
   {
     ignores: [
       "node_modules/",
-      ".next/",
+      "**/.next/",
       "dist/",
       "coverage/",
       ".vercel/",
+      "convex/_generated/",
       "**/*.config.mjs",
       "**/*.d.ts",
       // shadcn/ui generated components — do not lint

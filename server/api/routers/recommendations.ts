@@ -1,12 +1,7 @@
 import { router, publicProcedure } from "../trpc";
 import { z } from "zod";
 import { OutfitRecommendationService } from "../../services/outfitRecommendationService";
-import {
-  Mood,
-  WeatherCondition,
-  Garment,
-  RecommendationInput,
-} from "../../../shared/types";
+import { Garment, RecommendationInput } from "../../../shared/types";
 
 /**
  * Recommendation Router
@@ -21,7 +16,7 @@ const MOCK_GARMENTS: Garment[] = [
     id: "g1",
     userId: "user1",
     name: "Blue Linen Shirt",
-    category: "tops",
+    category: "top",
     primaryColor: "blue",
     material: "linen",
     season: "summer",
@@ -32,7 +27,7 @@ const MOCK_GARMENTS: Garment[] = [
     id: "g2",
     userId: "user1",
     name: "Black Skinny Jeans",
-    category: "bottoms",
+    category: "bottom",
     primaryColor: "black",
     material: "denim",
     season: "all-season",
@@ -54,7 +49,7 @@ const MOCK_GARMENTS: Garment[] = [
     id: "g4",
     userId: "user1",
     name: "Wool Sweater",
-    category: "tops",
+    category: "top",
     primaryColor: "gray",
     material: "wool",
     season: "winter",
@@ -65,7 +60,7 @@ const MOCK_GARMENTS: Garment[] = [
     id: "g5",
     userId: "user1",
     name: "Khaki Chinos",
-    category: "bottoms",
+    category: "bottom",
     primaryColor: "beige",
     material: "cotton",
     season: "spring",
@@ -87,7 +82,7 @@ const MOCK_GARMENTS: Garment[] = [
     id: "g7",
     userId: "user1",
     name: "Cotton T-Shirt",
-    category: "tops",
+    category: "top",
     primaryColor: "white",
     material: "cotton",
     season: "summer",
@@ -98,7 +93,7 @@ const MOCK_GARMENTS: Garment[] = [
     id: "g8",
     userId: "user1",
     name: "Gold Necklace",
-    category: "accessories",
+    category: "accessory",
     primaryColor: "gold",
     material: "metal",
     season: "all-season",

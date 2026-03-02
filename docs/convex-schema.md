@@ -16,20 +16,9 @@
 
 ## Collections
 
-- [`users`](#users)
 - [`garments`](#garments)
 - [`outfits`](#outfits)
 - [`recommendationLogs`](#recommendationLogs)
-
----
-
-## `users`
-
-| Field   | Type     | Required |
-| ------- | -------- | -------- |
-| `name`  | `string` | no       |
-| `email` | `string` | no       |
-| `image` | `string` | no       |
 
 ---
 

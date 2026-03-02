@@ -5,9 +5,9 @@ import Link from "next/link";
 import { OutfitRecommendationCard } from "@/components/outfit-recommendation-card";
 import { useOutfitRecommendations } from "@/hooks/use-outfit-recommendations";
 import { useRequireAuth } from "@/hooks/use-require-auth";
-import type { Outfit } from "@shared/types";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@convex/_generated/api";
+import type { Doc } from "@convex/_generated/dataModel";
 import { MOCK_CLOSET_ITEMS } from "@shared/data/mock-closet";
 import { UserAvatar } from "@/components/user-avatar";
 
@@ -134,7 +134,7 @@ export default function Home() {
     const generateRecommendations = async () => {
       const garments =
         convexGarments.length > 0
-          ? convexGarments.map((g) => ({
+          ? convexGarments.map((g: Doc<"garments">) => ({
               id: g._id,
               userId,
               name: g.name,
@@ -219,7 +219,9 @@ export default function Home() {
         garments: outfit.garmentIds
           .map((id) => {
             // Look up the garment from Convex data
-            const item = convexGarments.find((g) => g._id === id);
+            const item = convexGarments.find(
+              (g: Doc<"garments">) => g._id === id
+            );
             if (!item) return null;
             return {
               id: item._id,
@@ -452,10 +454,10 @@ export default function Home() {
               const first = recommendedOutfit[0];
               if (!first) return;
               const garmentIds = convexGarments
-                .filter((g) =>
-                  first.garments.some((fg: any) => fg?.id === g._id)
+                .filter((g: Doc<"garments">) =>
+                  first.garments.some((fg: { id?: string }) => fg?.id === g._id)
                 )
-                .map((g) => g._id);
+                .map((g: Doc<"garments">) => g._id);
               if (garmentIds.length === 0) return;
               const id = await saveOutfit({
                 garmentIds,

@@ -81,7 +81,9 @@ export default function ClosetPage() {
   }, []);
 
   const selectAll = useCallback(() => {
-    setSelectedIds(new Set(filteredItems.map((item) => item._id)));
+    setSelectedIds(
+      new Set(filteredItems.map((item: ConvexGarment) => item._id))
+    );
   }, [filteredItems]);
 
   const deselectAll = useCallback(() => {
@@ -129,7 +131,7 @@ export default function ClosetPage() {
 
   const allFilteredSelected =
     filteredItems.length > 0 &&
-    filteredItems.every((item) => selectedIds.has(item._id));
+    filteredItems.every((item: ConvexGarment) => selectedIds.has(item._id));
 
   return (
     <main className="min-h-screen bg-background text-foreground selection:bg-signal-orange selection:text-background">

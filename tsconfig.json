@@ -17,7 +17,8 @@
     "paths": {
       "@/*": ["./apps/web/*"],
       "@server/*": ["./server/*"],
-      "@shared/*": ["./shared/*"]
+      "@shared/*": ["./shared/*"],
+      "@convex/*": ["./convex/*"]
     }
   },
   "include": ["apps/**/*", "server/**/*", "shared/**/*", "convex/**/*"],

@@ -106,6 +106,10 @@ jobs:
   build:
     needs: [format-check, lint, typecheck, test]
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_CONVEX_URL: https://placeholder.convex.cloud
+      NEXT_PUBLIC_CONVEX_SITE_URL: https://placeholder.convex.site
+      CONVEX_SITE_URL: https://placeholder.convex.site
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
