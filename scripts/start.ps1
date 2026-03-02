@@ -82,21 +82,59 @@ if (-not $NoDocker) {
     }
 }
 
+# ---- Readiness poll ----
+function Wait-ForApp {
+    param([string]$Url, [int]$MaxSeconds = 120)
+    $waited = 0
+    while ($waited -lt $MaxSeconds) {
+        try {
+            $r = Invoke-WebRequest -Uri $Url -TimeoutSec 2 -UseBasicParsing -ErrorAction SilentlyContinue
+            if ($r -and $r.StatusCode -lt 500) { return $true }
+        } catch { }
+        Start-Sleep -Seconds 3
+        $waited += 3
+        Write-Host "  Waiting for app... ${waited}s" -ForegroundColor Gray
+    }
+    return $false
+}
+
 # ---- Start ----
 if (-not $NoDocker) {
     Log "Starting Docker Compose (dev)..."
     docker compose up --build -d
-    Ok "Docker services up"
+    Ok "Containers started. Waiting for web app to be ready..."
+    if (Wait-ForApp "http://localhost:3000") {
+        Ok "App is ready"
+        Start-Process "http://localhost:3000"
+    } else {
+        Warn "App did not respond within 120s — check logs: docker compose logs -f web"
+    }
 } else {
     Warn "Skipping Docker (-NoDocker). Starting Next.js dev server in a new window..."
     Start-Process powershell -ArgumentList "-NoExit", "-Command", "Set-Location '$Root'; npm run dev"
+    Log "Waiting for dev server to be ready..."
+    if (Wait-ForApp "http://localhost:3000") {
+        Ok "App is ready"
+        Start-Process "http://localhost:3000"
+    } else {
+        Warn "Dev server did not respond within 120s."
+    }
 }
 
 Write-Host ""
 Ok "Startup done."
 Write-Host "  Web app:  http://localhost:3000" -ForegroundColor White
-Write-Host "  Postgres: localhost:54322"       -ForegroundColor White
+Write-Host "  Postgres: localhost:5433"         -ForegroundColor White
 Write-Host ""
 Write-Host "  Tail logs : docker compose logs -f web" -ForegroundColor Gray
-Write-Host "  Stop      : .\scripts\stop.ps1"         -ForegroundColor Gray
+Write-Host "  Type :q   to stop everything and quit"  -ForegroundColor Gray
 Write-Host ""
+
+while ($true) {
+    $cmd = Read-Host
+    if ($cmd -eq ":q") {
+        Log "Stopping..."
+        & "$Root\scripts\stop.ps1"
+        break
+    }
+}

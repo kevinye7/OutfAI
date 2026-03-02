@@ -37,8 +37,8 @@ function Stop-Port {
 Log "Stopping Docker Compose services..."
 docker compose down 2>$null
 
-Log "Freeing project ports (3000, 54321-54324)..."
-foreach ($port in @(3000, 54321, 54322, 54323, 54324)) {
+Log "Freeing project ports (3000, 5433, 54321-54324)..."
+foreach ($port in @(3000, 5433, 54321, 54322, 54323, 54324)) {
     Stop-Port -Port $port
 }
 

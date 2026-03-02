@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -20,17 +21,16 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+      const { error } = await authClient.signIn.username({
+        username,
+        password,
       });
 
-      if (res.ok) {
+      if (error) {
+        setError("Invalid username or password.");
+      } else {
         router.push(callbackUrl);
         router.refresh();
-      } else {
-        setError("Invalid username or password.");
       }
     } catch {
       setError("Something went wrong. Please try again.");

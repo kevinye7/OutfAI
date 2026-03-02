@@ -21,9 +21,12 @@ services:
     volumes:
       # Mount the whole repo so code changes hot-reload
       - .:/app
-      # Prevent the host's node_modules from shadowing the
-      # container's installed modules
-      - node_modules_cache:/app/node_modules
+      # Anonymous volume so the container's node_modules (built by npm ci
+      # in the Dockerfile) are never shadowed by the host's node_modules.
+      # Using anonymous (not named) means a docker compose up --build always
+      # picks up packages added to package.json without needing a manual
+      # `docker compose down -v`.
+      - /app/node_modules
     env_file:
       - .env.local
     environment:
@@ -37,13 +40,13 @@ services:
 
   # ----------------------------------------------------------
   # Postgres (local stand-in for Supabase DB)
-  # Accessible on the host at localhost:54322 to match the
-  # port Supabase local stack uses by convention.
+  # Host port 5433 avoids the Windows/Hyper-V excluded port
+  # range that blocks binding to 54322 on most machines.
   # ----------------------------------------------------------
   db:
     image: postgres:16-alpine
     ports:
-      - "54322:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -59,4 +62,3 @@ services:
 
 volumes:
   postgres_data:
-  node_modules_cache:
