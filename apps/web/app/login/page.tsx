@@ -66,10 +66,8 @@ function LoginForm() {
     setError("");
     try {
       const { error } = await authClient.sendVerificationEmail({
-        body: {
-          email: resendEmail.trim(),
-          callbackURL: "/verify-email",
-        },
+        email: resendEmail.trim(),
+        callbackURL: "/verify-email",
       });
       if (error)
         setError(error.message ?? "Could not send verification email.");
