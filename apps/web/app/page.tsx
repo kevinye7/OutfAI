@@ -358,7 +358,7 @@ export default function Home() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
         <div className="flex items-center justify-between px-4 py-5 md:px-8 lg:px-12">
-          <h1 className="text-base md:text-lg tracking-tight font-medium">
+          <h1 className="text-[10px] md:text-xs uppercase tracking-[0.3em] font-medium">
             OutfAI
           </h1>
           <UserAvatar />

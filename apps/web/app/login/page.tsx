@@ -96,7 +96,7 @@ function LoginForm() {
           <div className="mb-12 flex items-center justify-between">
             <Link
               href="/"
-              className="group inline-flex items-center gap-2 text-sm tracking-tight font-medium text-foreground/90 hover:text-foreground transition-colors duration-150"
+              className="group inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] font-medium text-foreground/90 hover:text-foreground transition-colors duration-150"
             >
               <span className="relative">
                 OutfAI

@@ -36,7 +36,7 @@ export default function ProfilePage() {
         <div className="flex items-center justify-between px-4 py-5 md:px-8 lg:px-12">
           <Link
             href="/"
-            className="text-base md:text-lg tracking-tight font-medium hover:text-signal-orange transition-colors duration-100"
+            className="text-[10px] md:text-xs uppercase tracking-[0.3em] font-medium hover:text-signal-orange transition-colors duration-100"
           >
             OutfAI
           </Link>
