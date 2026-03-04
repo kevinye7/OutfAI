@@ -1,8 +1,9 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "@convex/_generated/api";
 import type { Doc } from "@convex/_generated/dataModel";
 import { useRequireAuth } from "@/hooks/use-require-auth";
@@ -20,6 +21,40 @@ export default function ProfilePage() {
   const router = useRouter();
   const currentUser = useRequireAuth("/profile");
   const garments = useQuery(api.garments.list) ?? [];
+  const userPreferences = useQuery(api.userPreferences.get);
+  const savePreferences = useMutation(api.userPreferences.save);
+
+  const [preferredStyles, setPreferredStyles] = React.useState<string[]>([]);
+  const [preferredColors, setPreferredColors] = React.useState<string[]>([]);
+  const [avoidedColors, setAvoidedColors] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    if (userPreferences?.explicit) {
+      setPreferredStyles(userPreferences.explicit.preferredStyles ?? []);
+      setPreferredColors(userPreferences.explicit.preferredColors ?? []);
+      setAvoidedColors(userPreferences.explicit.avoidedColors ?? []);
+    }
+  }, [userPreferences]);
+
+  const toggleInList = (
+    value: string,
+    list: string[],
+    setter: (next: string[]) => void
+  ) => {
+    if (list.includes(value)) {
+      setter(list.filter((v) => v !== value));
+    } else {
+      setter([...list, value]);
+    }
+  };
+
+  const handleSavePreferences = async () => {
+    await savePreferences({
+      preferredStyles,
+      preferredColors,
+      avoidedColors,
+    });
+  };
 
   const handleSignOut = async () => {
     await authClient.signOut();
@@ -109,6 +144,121 @@ export default function ProfilePage() {
               </p>
             </div>
           </div>
+        </section>
+
+        {/* Style Preferences */}
+        <section className="mb-12">
+          <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground mb-4">
+            Style Preferences
+          </p>
+
+          {/* Preferred styles */}
+          <div className="mb-6">
+            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+              Preferred styles
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {["minimalist", "bold", "classic", "trendy", "cozy"].map(
+                (style) => {
+                  const active = preferredStyles.includes(style);
+                  return (
+                    <button
+                      key={style}
+                      type="button"
+                      onClick={() =>
+                        toggleInList(style, preferredStyles, setPreferredStyles)
+                      }
+                      className={`px-3 py-1 text-[11px] uppercase tracking-[0.16em] border transition-colors duration-100 ${
+                        active
+                          ? "border-foreground bg-foreground text-background"
+                          : "border-border text-muted-foreground hover:border-foreground"
+                      }`}
+                    >
+                      {style}
+                    </button>
+                  );
+                }
+              )}
+            </div>
+          </div>
+
+          {/* Preferred colors */}
+          <div className="mb-6">
+            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+              Preferred colors
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {["black", "white", "gray", "navy", "beige", "red", "blue"].map(
+                (color) => {
+                  const active = preferredColors.includes(color);
+                  return (
+                    <button
+                      key={color}
+                      type="button"
+                      onClick={() =>
+                        toggleInList(color, preferredColors, setPreferredColors)
+                      }
+                      className={`px-3 py-1 text-[11px] uppercase tracking-[0.16em] border transition-colors duration-100 ${
+                        active
+                          ? "border-foreground bg-foreground text-background"
+                          : "border-border text-muted-foreground hover:border-foreground"
+                      }`}
+                    >
+                      {color}
+                    </button>
+                  );
+                }
+              )}
+            </div>
+          </div>
+
+          {/* Colors to avoid */}
+          <div className="mb-6">
+            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+              Colors to avoid
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {["black", "white", "gray", "navy", "beige", "red", "blue"].map(
+                (color) => {
+                  const active = avoidedColors.includes(color);
+                  return (
+                    <button
+                      key={color}
+                      type="button"
+                      onClick={() =>
+                        toggleInList(color, avoidedColors, setAvoidedColors)
+                      }
+                      className={`px-3 py-1 text-[11px] uppercase tracking-[0.16em] border transition-colors duration-100 ${
+                        active
+                          ? "border-destructive bg-destructive text-background"
+                          : "border-border text-muted-foreground hover:border-destructive"
+                      }`}
+                    >
+                      {color}
+                    </button>
+                  );
+                }
+              )}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleSavePreferences}
+            className="mt-2 flex items-center justify-between w-full border border-border px-5 py-4 text-[11px] uppercase tracking-[0.2em] text-foreground hover:border-foreground transition-colors duration-100"
+          >
+            <span>Save Preferences</span>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
         </section>
 
         {/* Actions */}

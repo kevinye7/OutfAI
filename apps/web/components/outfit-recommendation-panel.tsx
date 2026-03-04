@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useQuery } from "convex/react";
+import { api } from "@convex/_generated/api";
 import { Mood, WeatherCondition } from "@/../../shared/types";
 import { useOutfitRecommendations } from "@/hooks/use-outfit-recommendations";
 
@@ -35,6 +37,7 @@ const WEATHER_CONDITIONS: WeatherCondition[] = [
 export function OutfitRecommendationPanel({
   userId,
 }: OutfitRecommendationPanelProps) {
+  const preferences = useQuery(api.userPreferences.get);
   const [selectedMood, setSelectedMood] = useState<Mood>("casual");
   const [selectedWeather, setSelectedWeather] =
     useState<WeatherCondition>("sunny");
@@ -47,6 +50,7 @@ export function OutfitRecommendationPanel({
       weather: selectedWeather,
       temperature,
       limitCount: 5,
+      preferences: preferences ?? undefined,
     });
 
   const handleGenerate = async () => {
@@ -54,6 +58,7 @@ export function OutfitRecommendationPanel({
       mood: selectedMood,
       weather: selectedWeather,
       temperature,
+      preferences: preferences ?? undefined,
     });
   };
 

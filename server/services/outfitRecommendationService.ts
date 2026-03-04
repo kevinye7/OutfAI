@@ -6,6 +6,7 @@ import {
   Mood,
   WeatherCondition,
   GarmentCategory,
+  UserStylePreferences,
 } from "../../shared/types";
 
 /**
@@ -22,6 +23,7 @@ import {
  * - Occasion Matching: +0-12 points
  * - Versatility: +0-8 points
  * - Diversity: +5-10 points
+ * - User Preferences: +0-15 points
  * - Total Range: 50-100 points
  * - Minimum Threshold: 60 points (must pass to be recommended)
  *
@@ -67,7 +69,8 @@ export class OutfitRecommendationService {
     // Generate candidate outfits
     const candidates = this.generateCandidates(
       filteredGarments,
-      input.mood || "casual"
+      input.mood || "casual",
+      input.preferences
     );
 
     // Minimum score threshold - outfits must meet this quality bar
@@ -218,7 +221,8 @@ export class OutfitRecommendationService {
    */
   private static generateCandidates(
     garments: Garment[],
-    mood: Mood
+    mood: Mood,
+    preferences?: UserStylePreferences
   ): OutfitCandidate[] {
     const candidates: OutfitCandidate[] = [];
 
@@ -251,7 +255,7 @@ export class OutfitRecommendationService {
           const outfitPieces = isBarefoot
             ? [top, bottom]
             : [top, bottom, shoe as Garment];
-          const score = this.scoreOutfit(outfitPieces, mood, garments);
+          const score = this.scoreOutfit(outfitPieces, mood, preferences);
           const reasons = this.generateReasons(outfitPieces, mood);
 
           candidates.push({
@@ -273,7 +277,7 @@ export class OutfitRecommendationService {
           const score = this.scoreOutfit(
             [top, bottom, ...shoes.slice(0, 1), accessory],
             mood,
-            garments
+            preferences
           );
           const reasons = this.generateReasons(
             [top, bottom, ...shoes.slice(0, 1), accessory],
@@ -316,7 +320,7 @@ export class OutfitRecommendationService {
   private static scoreOutfit(
     garments: Garment[],
     mood: Mood,
-    allGarments: Garment[]
+    preferences?: UserStylePreferences
   ): number {
     let score = 0;
 
@@ -347,7 +351,109 @@ export class OutfitRecommendationService {
     const diversityScore = this.scoreDiversity(garments);
     score += diversityScore;
 
+    // User preference bonuses (explicit + learned, if provided on input)
+    const explicitScore = this.scoreExplicitPreferences(
+      garments,
+      preferences?.explicit
+    );
+    const learnedScore = this.scoreLearnedPreferences(
+      garments,
+      preferences?.learned
+    );
+    score += explicitScore + learnedScore;
+
     return Math.min(score, 100); // Cap at 100
+  }
+
+  /**
+   * Score how well an outfit matches the user's explicit style preferences
+   * from their profile (stronger authority, includes avoids).
+   */
+  private static scoreExplicitPreferences(
+    garments: Garment[],
+    preferences?: UserStylePreferences["explicit"] | null
+  ): number {
+    if (!preferences) return 0;
+
+    let score = 0;
+
+    const preferredStyles =
+      preferences.preferredStyles?.map((s) => s.toLowerCase()) ?? [];
+    const preferredColors =
+      preferences.preferredColors?.map((c) => c.toLowerCase()) ?? [];
+    const avoidedColors =
+      preferences.avoidedColors?.map((c) => c.toLowerCase()) ?? [];
+
+    for (const garment of garments) {
+      const garmentStyles = (garment.style ?? []).map((s) => s.toLowerCase());
+      const garmentColor = garment.primaryColor.toLowerCase();
+
+      // Reward preferred styles
+      if (preferredStyles.length > 0) {
+        const styleMatches = garmentStyles.filter((s) =>
+          preferredStyles.includes(s)
+        ).length;
+        score += styleMatches * 2;
+      }
+
+      // Reward preferred colors
+      if (
+        preferredColors.length > 0 &&
+        preferredColors.includes(garmentColor)
+      ) {
+        score += 2;
+      }
+
+      // Penalize avoided colors a bit more strongly
+      if (avoidedColors.length > 0 && avoidedColors.includes(garmentColor)) {
+        score -= 4;
+      }
+    }
+
+    // Keep influence modest but allow both positive and negative swings
+    return Math.max(-10, Math.min(score, 15));
+  }
+
+  /**
+   * Score how well an outfit matches the user's learned preferences from
+   * behavior (saved outfits). No "avoid" concept here, just gentle nudging.
+   */
+  private static scoreLearnedPreferences(
+    garments: Garment[],
+    preferences?: UserStylePreferences["learned"]
+  ): number {
+    if (!preferences) return 0;
+
+    let score = 0;
+
+    const preferredStyles =
+      preferences.preferredStyles?.map((s) => s.toLowerCase()) ?? [];
+    const preferredColors =
+      preferences.preferredColors?.map((c) => c.toLowerCase()) ?? [];
+
+    for (const garment of garments) {
+      const garmentStyles = (garment.style ?? []).map((s) => s.toLowerCase());
+      const garmentColor = garment.primaryColor.toLowerCase();
+
+      // Reward learned preferred styles (slightly lighter weight)
+      if (preferredStyles.length > 0) {
+        const styleMatches = garmentStyles.filter((s) =>
+          preferredStyles.includes(s)
+        ).length;
+        score += styleMatches * 1.5;
+      }
+
+      // Reward learned preferred colors
+      if (
+        preferredColors.length > 0 &&
+        preferredColors.includes(garmentColor)
+      ) {
+        score += 1.5;
+      }
+    }
+
+    // Learned preferences are softer influence
+    return Math.max(0, Math.min(score, 10));
   }
 
   /**

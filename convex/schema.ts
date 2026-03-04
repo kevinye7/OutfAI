@@ -43,4 +43,13 @@ export default defineSchema({
     weather: v.optional(v.string()),
     loggedAt: v.number(),
   }).index("by_userId", ["userId"]),
+
+  // Per-user style preferences that can be used to personalize recommendations.
+  userPreferences: defineTable({
+    userId: v.string(),
+    favoriteMoods: v.optional(v.array(v.string())),
+    preferredStyles: v.optional(v.array(v.string())),
+    preferredColors: v.optional(v.array(v.string())),
+    avoidedColors: v.optional(v.array(v.string())),
+  }).index("by_userId", ["userId"]),
 });

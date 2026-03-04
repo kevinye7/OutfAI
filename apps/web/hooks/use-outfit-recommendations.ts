@@ -1,5 +1,11 @@
 import { useCallback, useState } from "react";
-import { Mood, WeatherCondition, Outfit, Garment } from "@shared/types";
+import {
+  Mood,
+  WeatherCondition,
+  Outfit,
+  Garment,
+  UserStylePreferences,
+} from "@shared/types";
 
 /**
  * useOutfitRecommendations
@@ -15,6 +21,7 @@ interface UseOutfitRecommendationsOptions {
   temperature?: number;
   occasion?: string;
   limitCount?: number;
+  preferences?: UserStylePreferences;
 }
 
 interface UseOutfitRecommendationsReturn {
@@ -23,7 +30,9 @@ interface UseOutfitRecommendationsReturn {
   error: string | null;
   explanation: string;
   generate: (
-    options: Partial<UseOutfitRecommendationsOptions> & { garments?: Garment[] }
+    options: Partial<UseOutfitRecommendationsOptions> & {
+      garments?: Garment[];
+    }
   ) => Promise<void>;
   reset: () => void;
 }
@@ -68,6 +77,7 @@ export function useOutfitRecommendations(
             temperature: options.temperature,
             occasion: options.occasion,
             limitCount: options.limitCount,
+            preferences: options.preferences,
             garments,
           }),
         });

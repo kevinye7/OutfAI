@@ -1,5 +1,9 @@
 import { OutfitRecommendationService } from "@/../../server/services/outfitRecommendationService";
-import { Garment, RecommendationInput } from "@/../../shared/types";
+import {
+  Garment,
+  RecommendationInput,
+  UserStylePreferences,
+} from "@/../../shared/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -13,6 +17,7 @@ export async function POST(request: NextRequest) {
       occasion,
       limitCount = 5,
       garments = [],
+      preferences,
     } = body;
 
     // Ensure garments have Date objects for createdAt
@@ -29,6 +34,7 @@ export async function POST(request: NextRequest) {
       temperature,
       occasion,
       limitCount,
+      preferences: preferences as UserStylePreferences | undefined,
     };
 
     const result = await OutfitRecommendationService.generateOutfits(

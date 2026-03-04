@@ -59,6 +59,24 @@ export interface Outfit {
   createdAt: Date;
 }
 
+export interface ExplicitStylePreferences {
+  favoriteMoods?: Mood[];
+  preferredStyles?: string[];
+  preferredColors?: string[];
+  avoidedColors?: string[];
+}
+
+export interface LearnedStylePreferences {
+  favoriteMoods?: Mood[];
+  preferredStyles?: string[];
+  preferredColors?: string[];
+}
+
+export interface UserStylePreferences {
+  explicit?: ExplicitStylePreferences;
+  learned?: LearnedStylePreferences;
+}
+
 export interface RecommendationInput {
   userId: string;
   mood?: Mood;
@@ -66,6 +84,7 @@ export interface RecommendationInput {
   temperature?: number;
   occasion?: string;
   limitCount?: number;
+  preferences?: UserStylePreferences;
 }
 
 export interface RecommendationOutput {
